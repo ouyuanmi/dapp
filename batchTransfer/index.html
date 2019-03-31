@@ -1,0 +1,52 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>FirstDapp</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <link type="text/css" rel="stylesheet" href="styles/index.css" />
+    <script src="/javascripts/batchTransferContractABI.js"></script>
+    <script src="/javascripts/contract_abi.js"></script>
+</head>
+<body>
+    <table>
+        <tr align="left">
+            <th>CurrentAccount</th>
+            <th id="currentAccount" align="left" style="color:blueviolet">{{address}}</th>
+        </tr>
+        <tr></tr>
+        <tr>
+            <th align="left">
+                CoinAddress
+            </th>
+            <th align="left">
+                <input type="text" v-model="address" id="coinAddress" style="width:404px" />
+            </th>
+        </tr>
+        <tr>
+            <th align="left">
+                ReceiveAddress
+            </th>
+            <th align="left">
+                <textarea id="addressList" v-model="address" cols="55" rows="6" style="OVERFLOW:   hidden"></textarea>
+            </th>
+        </tr>
+        <tr>
+            <th align="left">
+                TransferValues
+            </th>
+            <th align="left">
+                <textarea id="valueList" v-model="values" cols="55" rows="6" style="OVERFLOW:   hidden"></textarea>
+            </th>
+        </tr>
+        <tr>
+            <th></th>
+            <th align="right">
+                <input id="btnRun" v-on:click="getTransferInfo" type="submit" value="Run" style="left:100px" />
+            </th>
+        </tr>
+    </table>
+    <script src="/javascripts/index.js"></script>
+</body>
+</html>
