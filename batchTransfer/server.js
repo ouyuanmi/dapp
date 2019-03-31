@@ -2,7 +2,6 @@ var http = require("http");
 var url = require("url");
 var fs = require("fs"); 
 var path = require("path"); 
-//var Web3 = require('web3');
 
 function start(route, handle) {
   function onRequest(request, response) {
