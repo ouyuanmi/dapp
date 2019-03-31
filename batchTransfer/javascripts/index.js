@@ -13,14 +13,20 @@ var CoinAddress = new Vue({
 var ReceiveAddress = new Vue({
 	el:'#addressList',
 	data:{
-		address: ['0x34d45c6B39B764BF91f6528FfA526f5C7275995D', '0x34d45c6B39B764BF91f6528FfA526f5C7275995D']
+		address: ''
 	}
 });
 var TransferValues = new Vue({
 	el:'#valueList',
 	data:{
-		values: ['20', '4'],
+		values: '',
 		total:0
+	}
+});
+var ErrorMessage = new Vue({
+	el: '#errormessage',
+	data: {
+		message: ''
 	}
 });
 var Submit = new Vue({
@@ -31,14 +37,39 @@ var Submit = new Vue({
 	// 在 `methods` 对象中定义方法
 	methods: {
 		getTransferInfo: function (event) {
-			// `this` 在方法里指向当前 Vue 实例
-			//alert('Hello ' + this.name + '!')
-			// `event` 是原生 DOM 事件
-			//if (event) {
-			//	alert(event.target.tagName)
-			//}
-			console.log(ReceiveAddress.address);
-			console.log(TransferValues.values);
+			var isError = false;
+			var msg = new Array;
+
+			if (CoinAddress.address.length == 0) {
+				msg.push('CoinAddress is necessary.');
+				isError = true;
+			}
+			if (ReceiveAddress.address.length == 0) {
+				msg.push('ReceiveAddress is necessary.');
+				isError = true;
+			}
+			if (TransferValues.values.length == 0) {
+				msg.push('TransferValues is necessary.');
+				isError = true;
+			}			
+			ReceiveAddress.address = convertArray(ReceiveAddress.address);
+			TransferValues.values = convertArray(TransferValues.values);
+			var cnt = ReceiveAddress.address.length;
+			if (cnt > 100) {
+				msg.push('Receive Address counts  is over 100 and donot be supported.');
+				isError = true;
+			}
+			if (ReceiveAddress.address.length != TransferValues.values.length) {
+				msg.push('The count of ReceiveAddress and TransferValues are must be equal.');
+				isError = true;
+			}
+			if (isError) {
+				ErrorMessage.message = '';
+				for (var i in msg) {
+					ErrorMessage.message += msg[i] + '\n';
+				}
+				return;
+			}
 			for (var i in TransferValues.values) {
 				TransferValues.total += Number(TransferValues.values[i]);
 			} 
@@ -56,19 +87,22 @@ window.onload = function() {
 	    console.log(1);
 	} else {
 		console.log(2);	
-		console.log('You need install MetaMask');
+		ErrorMessage.message ='Your Browser Need Install web3.extend Tool.';
 		return;
-		//web3 = new Web3(new Web3.providers.HttpProvider(NODE_NRL));
 	}
+
+	var v = web3.version;  //获取web3的版本
+	console.log(v);	
 
 	web3.eth.defaultAccount = web3.eth.accounts[0];
 	CurrentAccount.address = web3.eth.accounts[0];
-
-	console.log(web3.eth.defaultAccount);
-	var v = web3.version;  //获取web3的版本
-	console.log(v);	
+	if (web3.eth.accounts.length == 0)
+		ErrorMessage.message = 'We can\'t read your ETH account address.';
 };
 
+function convertArray(values) {
+	return values.replace(/\ +/g, "").replace(/[\r\n]/g, "").split(',')
+}
 
 function startApp(){
 	var myContractAddress = CoinAddress.address;//'0xBD0dC36a80f01BF6b9786EbFCcd53BBE835BC493';
